@@ -11,6 +11,8 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         searchCall.enqueue(object: Callback<SearchResponse> {
 
             override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                tvTest.text = "Some error occurred!!!!!!"
+                tvTest.text = getString(R.string.error_retrofit_failure)
             }
 
             override fun onResponse(
