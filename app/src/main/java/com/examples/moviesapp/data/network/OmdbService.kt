@@ -10,7 +10,10 @@ interface OmdbService {
 
     @GET(".")
     fun findMoviesByTitle(
-        @Query("s") title: String
+        @Query("s") title: String,
+        @Query("type") type: String?,
+        @Query("y") year: String?,
+        @Query("plot") plot: String?
     ) : Call<SearchResponse>
 
     @GET(".")

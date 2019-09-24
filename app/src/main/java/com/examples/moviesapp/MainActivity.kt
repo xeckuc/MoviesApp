@@ -8,6 +8,9 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.examples.moviesapp.controllers.MainActivityController
+import com.examples.moviesapp.controllers.contracts.Contracts
+import com.examples.moviesapp.custom.MovieFilter
 import com.examples.moviesapp.data.entities.Movie
 import com.examples.moviesapp.data.entities.SearchResponse
 import com.examples.moviesapp.data.network.OmdbClient
@@ -17,18 +20,45 @@ import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-class MainActivity : AppCompatActivity() {
+                                        //MVC
+class MainActivity : AppCompatActivity()/*, Contracts.MainActivityContract*/ {
 
     private val client = OmdbClient.createClient()
+    private lateinit var movieFilter: MovieFilter
 
+    //region MVC
+    //MVC - Architecture Intro
+//    private lateinit var controller: Contracts.MainActivityControllerContract
+    //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //region MVC
+        //MVC - Architecture Intro
+//        controller = MainActivityController(this)
+        //endregion
+
+        addFilter()
         bindUI()
     }
+
+
+    //region MVC
+    //MVC - Architecture Intro
+//    override fun showProgress(isShowing: Boolean) {
+//        isProgressShowing(isShowing)
+//    }
+//
+//    override fun errorDialog(message: String) {
+//        showErrorDialog(message)
+//    }
+//
+//    override fun showMovies(list: List<Movie>) {
+//        setupRecyclerView(list)
+//    }
+    //endregion
 
     private fun bindUI() {
 
@@ -41,6 +71,13 @@ class MainActivity : AppCompatActivity() {
                 showErrorDialog("Please insert title!")
                 return@setOnClickListener
             }
+
+//            controller.findMovies(
+//                etSearch.text.toString(),
+//                movieFilter.getYear(),
+//                movieFilter.getType(),
+//                movieFilter.getPlot()
+//            )
 
             searchMovie(etSearch.text.toString())
         }
@@ -55,13 +92,29 @@ class MainActivity : AppCompatActivity() {
 
             return@setOnEditorActionListener false
         }
+
+        ibFilter.setOnClickListener {
+
+            if (movieFilter.visibility == View.VISIBLE) {
+                movieFilter.visibility = View.GONE
+            }
+            else {
+                movieFilter.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun searchMovie(title: String) {
 
         isProgressShowing(true)
 
-        val searchCall = client.findMoviesByTitle(title)
+        val searchCall = client
+            .findMoviesByTitle(
+                title,
+                movieFilter.getType(),
+                movieFilter.getYear(),
+                movieFilter.getPlot()
+            )
 
         searchCall.enqueue(object: Callback<SearchResponse> {
 
@@ -95,6 +148,14 @@ class MainActivity : AppCompatActivity() {
                 isProgressShowing(false)
             }
         })
+    }
+
+    private fun addFilter() {
+
+        movieFilter = MovieFilter(this)
+        movieFilter.visibility = View.GONE
+
+        linearLayout.addView(movieFilter)
     }
 
     private fun setupRecyclerView(list: List<Movie>) {

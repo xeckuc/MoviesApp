@@ -14,7 +14,7 @@ data class Movie (
     @SerializedName("Type")
     val type: String,
 
-    @SerializedName("PosterUrl")
+    @SerializedName("Poster")
     val posterUrl: String,
 
     val imdbID: String,
