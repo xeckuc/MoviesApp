@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">MoviesApp</string>
     <string name="error_retrofit_failure">Request Failed</string>
+    <string name="search_title">Search Title</string>
+    <string name="title">Title:</string>
+    <string name="year">Year:</string>
+    <string name="type">Type:</string>
+    <string name="plot">Plot:</string>
+    <string name="imdb_rating">Imdb Rating:</string>
 </resources>
